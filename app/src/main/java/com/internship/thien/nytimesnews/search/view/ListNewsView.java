@@ -13,6 +13,8 @@ public interface ListNewsView {
 
     void hideLoading();
 
+    void setupView();
+
     void showListNews(List<News> news);
 
     void showError(String error);

@@ -80,7 +80,7 @@ public class DataRepositoryImpl implements DataRepository {
         String date;
         String date_formatted;
 
-        DBHelper db = new DBHelper();
+        //DBHelper db = new DBHelper();
 
         EditText ed_date = view.findViewById(R.id.edit_date);
         Spinner spinner = view.findViewById(R.id.spn_sort);
@@ -112,7 +112,7 @@ public class DataRepositoryImpl implements DataRepository {
         if(!new_desk.equals(empty_desk))
             data.put("new_desk", new_desk);
 
-        db.setDB(context, data);
+        DBHelper.newInstance().setDB(context, data);
 
     }
 

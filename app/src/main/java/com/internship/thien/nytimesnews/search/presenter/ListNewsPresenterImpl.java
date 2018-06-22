@@ -18,7 +18,6 @@ public class ListNewsPresenterImpl implements ListNewsPresenter, DataListener {
 
     private ListNewsView mView;
     private DataRepository newsRepository;
-    private DBHelper dbHelper;
 
     public ListNewsPresenterImpl(ListNewsView mView, DataRepository movieRepository) {
         this.mView = mView;
@@ -28,6 +27,7 @@ public class ListNewsPresenterImpl implements ListNewsPresenter, DataListener {
     @Override
     public void getNews(Context context, Map<String, String> query) {
 
+        mView.showLoading();
         if (NetworkUtils.isOnline(context))
             newsRepository.getDataFromNetWork(this, query);
         else
@@ -52,7 +52,10 @@ public class ListNewsPresenterImpl implements ListNewsPresenter, DataListener {
 
     @Override
     public void onResponse(List<News> news) {
+
+        mView.hideLoading();
         mView.showListNews(news);
+
     }
 
     @Override
