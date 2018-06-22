@@ -1,8 +1,11 @@
 package com.internship.thien.nytimesnews.search.presenter;
 
 import android.content.Context;
+import android.util.Log;
+import android.view.View;
 
 import com.internship.thien.nytimesnews.data.model.News;
+import com.internship.thien.nytimesnews.helper.DBHelper;
 import com.internship.thien.nytimesnews.search.model.DataListener;
 import com.internship.thien.nytimesnews.search.model.DataRepository;
 import com.internship.thien.nytimesnews.search.view.ListNewsView;
@@ -15,6 +18,7 @@ public class ListNewsPresenterImpl implements ListNewsPresenter, DataListener {
 
     private ListNewsView mView;
     private DataRepository newsRepository;
+    private DBHelper dbHelper;
 
     public ListNewsPresenterImpl(ListNewsView mView, DataRepository movieRepository) {
         this.mView = mView;
@@ -22,13 +26,28 @@ public class ListNewsPresenterImpl implements ListNewsPresenter, DataListener {
     }
 
     @Override
-    public void getNews(Context context, Map query) {
+    public void getNews(Context context, Map<String, String> query) {
 
         if (NetworkUtils.isOnline(context))
             newsRepository.getDataFromNetWork(this, query);
         else
-            mView.showError("There're no network connection. Please try again!");
+            mView.showError("No network connection. Please try again!");
 
+    }
+
+    public Map setupQuery(Context context, String query) {
+
+        //DBHelper db  = new DBHelper();
+
+        Map<String, String> data = DBHelper.newInstance().getDB(context);
+
+        if(data.get("fq") != null)
+            query = query + " " + data.get("fq");
+
+        data.put("fq", query);
+
+        Log.d("Query setup",data.toString());
+        return data;
     }
 
     @Override
@@ -40,4 +59,23 @@ public class ListNewsPresenterImpl implements ListNewsPresenter, DataListener {
     public void onError(String error) {
         mView.showError(error);
     }
+
+    @Override
+    public void getSettings(Context context, View view) {
+        newsRepository.getDataFromSettings(context, view);
+
+    }
+
+    @Override
+    public void resetSettings(Context context) {
+
+        DBHelper.newInstance().resetDB(context);
+    }
+
+    @Override
+    public String setupDate(int day, int month, int year) {
+       return newsRepository.setupDateString(day, month, year);
+    }
+
+
 }

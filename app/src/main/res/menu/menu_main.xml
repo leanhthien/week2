@@ -9,10 +9,10 @@
         app:actionViewClass="android.support.v7.widget.SearchView">
     </item>
     <item
-        android:id="@+id/action_more"
-        android:icon="@drawable/ic_more"
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_settings"
         app:showAsAction="ifRoom|withText"
-        android:title="@string/more_title">
+        android:title="@string/settings_title">
     </item>
 
 

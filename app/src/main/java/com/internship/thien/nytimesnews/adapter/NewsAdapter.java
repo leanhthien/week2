@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.internship.thien.nytimesnews.R;
 import com.internship.thien.nytimesnews.data.model.News;
@@ -76,8 +75,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
 
         News News = mNews.get(position);
 
-        link_thumbnail = createThumbnailLink(News.getMultimedia().get(0).getUrl());
-
         CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(mContext);
         circularProgressDrawable.setStrokeWidth(4f);
         circularProgressDrawable.setCenterRadius(40f);
@@ -92,13 +89,24 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
         assert holder.snippet != null;
         holder.snippet.setText(News.getSnippet());
 
-        Glide.with(mContext).load(link_thumbnail)
-                .apply(new RequestOptions()
-                        .placeholder(circularProgressDrawable)
-                        .fitCenter())
-                .apply(bitmapTransform(new RoundedCornersTransformation(RADIUS, 0, RoundedCornersTransformation.CornerType.ALL)))
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(holder.thumbnail);
+        if(News.getMultimedia().size()!= 0) {
+            link_thumbnail = createThumbnailLink(News.getMultimedia().get(0).getUrl());
+            Glide.with(mContext).load(link_thumbnail)
+                    .apply(new RequestOptions()
+                            .placeholder(circularProgressDrawable)
+                            .fitCenter())
+                    .apply(bitmapTransform(new RoundedCornersTransformation(RADIUS, 0, RoundedCornersTransformation.CornerType.ALL)))
+                    .into(holder.thumbnail);
+        }
+        else {
+
+            Glide.with(mContext).load("")
+                    .apply(new RequestOptions()
+                            .placeholder(R.drawable.img_nytimes_logo_default)
+                            .fitCenter())
+                    .apply(bitmapTransform(new RoundedCornersTransformation(RADIUS, 0, RoundedCornersTransformation.CornerType.ALL)))
+                    .into(holder.thumbnail);
+        }
 
     }
 
@@ -110,7 +118,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
     //For ........
     @Override
     public int getItemViewType(int position) {
-        if (mNews.get(position).getScore() < 50.0)
+        if (mNews.get(position).getMultimedia().size() != 0)
             return 0;
         else
             return 1;

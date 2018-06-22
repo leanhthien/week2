@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="sort_order">
+        <item>Oldest</item>
+        <item>Newest</item>
+    </array>
+
+    <array name="new_desk">
+        <item>Arts</item>
+        <item>Fashion &amp; Style</item>
+        <item>Sports</item>
+    </array>
+    
+
+
+</resources>
