@@ -14,31 +14,19 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical">
 
-        <!--Thumbnail Image-->
-        <ImageView
-            android:id="@+id/thumbnail_news"
+        <!--News Headline-->
+        <TextView
+            android:id="@+id/headline_news"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:textColor="@color/black_text"
+            android:textSize="12sp"
+            android:textStyle="bold"
             card_view:layout_constraintBottom_toTopOf="@+id/snippet_news"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
-
-        <!--News Headline-->
-        <TextView
-            android:id="@+id/headline_news"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="4dp"
-            android:gravity="bottom|start"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            card_view:layout_constraintBottom_toBottomOf="@+id/thumbnail_news"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toTopOf="@+id/thumbnail_news" />
 
         <!--News Snippet-->
         <TextView
@@ -47,12 +35,14 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:textColor="@color/black_text"
-            android:textSize="8sp"
+            android:textSize="10sp"
+            android:textStyle="italic"
             card_view:layout_constraintBottom_toBottomOf="parent"
-            card_view:layout_constraintEnd_toStartOf="@+id/thumbnail_news"
-            card_view:layout_constraintStart_toStartOf="@+id/thumbnail_news"
-            card_view:layout_constraintTop_toBottomOf="@+id/thumbnail_news" />
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toBottomOf="@+id/headline_news" />
 
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>
+

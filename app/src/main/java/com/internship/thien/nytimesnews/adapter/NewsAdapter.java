@@ -31,7 +31,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
     private List<News> mNews;
     private Context mContext;
     private NewsItemListener mNewsListener;
-    //int LENGTH = 150;
     int RADIUS = 10;
 
     public NewsAdapter(Context context, List<News> News, NewsItemListener itemListener) {
@@ -59,7 +58,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
             if (viewType == 0)
                 postView = inflater.inflate(R.layout.item_news, parent, false);
             else
-                postView = inflater.inflate(R.layout.item_news, parent, false);
+                postView = inflater.inflate(R.layout.item_news_text, parent, false);
 
         }
         else
@@ -84,28 +83,24 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
         //int orientation = mContext.getResources().getConfiguration().orientation;
         //if (orientation == Configuration.ORIENTATION_PORTRAIT)
 
-        assert holder.headline != null;
-        holder.headline.setText(News.getHeadline().getMain());
-        assert holder.snippet != null;
-        holder.snippet.setText(News.getSnippet());
-
         if(News.getMultimedia().size()!= 0) {
+            assert holder.headline != null;
+            holder.headline.setText(News.getHeadline().getMain());
+
             link_thumbnail = createThumbnailLink(News.getMultimedia().get(0).getUrl());
+            assert holder.thumbnail != null;
             Glide.with(mContext).load(link_thumbnail)
                     .apply(new RequestOptions()
                             .placeholder(circularProgressDrawable)
                             .fitCenter())
-                    .apply(bitmapTransform(new RoundedCornersTransformation(RADIUS, 0, RoundedCornersTransformation.CornerType.ALL)))
                     .into(holder.thumbnail);
         }
         else {
 
-            Glide.with(mContext).load("")
-                    .apply(new RequestOptions()
-                            .placeholder(R.drawable.img_nytimes_logo_default)
-                            .fitCenter())
-                    .apply(bitmapTransform(new RoundedCornersTransformation(RADIUS, 0, RoundedCornersTransformation.CornerType.ALL)))
-                    .into(holder.thumbnail);
+            assert holder.headline != null;
+            holder.headline.setText(News.getHeadline().getMain());
+            assert holder.snippet != null;
+            holder.snippet.setText(News.getSnippet());
         }
 
     }
@@ -115,7 +110,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
         return mNews.size();
     }
 
-    //For ........
+    //For clarify article with adn without image
     @Override
     public int getItemViewType(int position) {
         if (mNews.get(position).getMultimedia().size() != 0)
@@ -125,10 +120,18 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
 
     }
 
-    public void setData(List<News> data) {
-        mNews.clear();
-        mNews.addAll(data);
-        notifyDataSetChanged();
+    public void setData(List<News> data, int type) {
+
+        if (type == 0) {
+            mNews.clear();
+            mNews.addAll(data);
+            notifyDataSetChanged();
+        }
+        else {
+            mNews.addAll(data);
+            notifyItemInserted(data.size() - 1);
+        }
+
     }
 
 
@@ -166,6 +169,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
         @Nullable
         TextView snippet;
         @BindView(R.id.thumbnail_news)
+        @Nullable
         ImageView thumbnail;
 
         NewsItemListener mNewsListener;

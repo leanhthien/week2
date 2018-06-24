@@ -50,7 +50,7 @@ public class News {
     Integer wordCount;
     @SerializedName("score")
     @Expose
-    Integer score;
+    Double score;
     @SerializedName("section_name")
     @Expose
     String sectionName;
@@ -161,11 +161,11 @@ public class News {
         this.wordCount = wordCount;
     }
 
-    public Integer getScore() {
+    public Double getScore() {
         return score;
     }
 
-    public void setScore(Integer score) {
+    public void setScore(Double score) {
         this.score = score;
     }
 

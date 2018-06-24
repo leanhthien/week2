@@ -4,15 +4,16 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.internship.thien.nytimesnews.BuildConfig;
 import com.internship.thien.nytimesnews.R;
 import com.internship.thien.nytimesnews.api.APIService;
+import com.internship.thien.nytimesnews.data.model.Meta;
 import com.internship.thien.nytimesnews.data.model.News;
 import com.internship.thien.nytimesnews.data.model.Result;
 import com.internship.thien.nytimesnews.helper.DBHelper;
@@ -30,13 +31,14 @@ import retrofit2.Response;
 public class DataRepositoryImpl implements DataRepository {
 
     private APIService mService;
+    public Meta meta;
 
     public DataRepositoryImpl() {
         mService = APIUtils.getAPIService();
     }
 
     @Override
-    public void getDataFromNetWork(final DataListener listener, Map<String, String> query) {
+    public void getDataFromNetWork(final DataListener listener, Map<String, String> query, int type) {
 
         Call<Result> call = mService.searchByHand(query, BuildConfig.API_KEY);
 
@@ -47,10 +49,15 @@ public class DataRepositoryImpl implements DataRepository {
 
                 assert response != null;
                 if (response.isSuccessful()) {
-                    Log.d("Response",response.toString());
+
                     List<News> news = Objects.requireNonNull(response.body()).getResponse().getNews();
-                    if (news != null)
-                        listener.onResponse(news);
+                    if (news != null) {
+                        meta = new Meta();
+                        meta = Objects.requireNonNull(response.body()).getResponse().getMeta();
+
+                        listener.onResponse(news, type, meta);
+
+                    }
                     else {
                         listener.onError("Nothing return!");
                     }
@@ -80,13 +87,11 @@ public class DataRepositoryImpl implements DataRepository {
         String date;
         String date_formatted;
 
-        //DBHelper db = new DBHelper();
-
         EditText ed_date = view.findViewById(R.id.edit_date);
         Spinner spinner = view.findViewById(R.id.spn_sort);
-        CheckBox check_0 = view.findViewById(R.id.cb_arts);
-        CheckBox check_1 = view.findViewById(R.id.cb_fashion);
-        CheckBox check_2 = view.findViewById(R.id.cb_sports);
+        SwitchCompat check_0 = view.findViewById(R.id.sw_arts);
+        SwitchCompat check_1 = view.findViewById(R.id.sw_fashion);
+        SwitchCompat check_2 = view.findViewById(R.id.sw_sports);
 
         date = ed_date.getText().toString();
         String[] separated = date.split("/");
@@ -117,6 +122,16 @@ public class DataRepositoryImpl implements DataRepository {
     }
 
     @Override
+    public Map<String, String> addQuery(Context context, String query) {
+
+        Map<String, String> data = DBHelper.newInstance().getDB(context);
+
+        data.put("q", query);
+
+        return data;
+    }
+
+    @Override
     public String setupDateString(int day, int month, int year) {
         String mDay;
         String mMonth;
@@ -136,5 +151,17 @@ public class DataRepositoryImpl implements DataRepository {
         String firstLetter = data.substring(0,1).toLowerCase();
         String restLetters = data.substring(1);
         return firstLetter + restLetters;
+    }
+
+    public int setupOffset(Meta meta) {
+
+        if (meta.getHits() - meta.getOffset() >= 10) {
+            if (meta.getOffset() != 0)
+                return meta.getOffset()/10 + 1;
+            else
+                return 1;
+
+        }
+        return -1;
     }
 }

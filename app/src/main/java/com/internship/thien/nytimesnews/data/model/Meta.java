@@ -3,17 +3,22 @@ package com.internship.thien.nytimesnews.data.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class Meta {
 
     @SerializedName("hits")
     @Expose
-    private Integer hits;
+    Integer hits;
     @SerializedName("offset")
     @Expose
-    private Integer offset;
+    Integer offset;
     @SerializedName("time")
     @Expose
-    private Integer time;
+    Integer time;
+
+    public Meta(){}
 
     public Integer getHits() {
         return hits;

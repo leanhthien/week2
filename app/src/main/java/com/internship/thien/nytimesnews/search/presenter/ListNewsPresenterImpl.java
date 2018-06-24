@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 
+import com.internship.thien.nytimesnews.data.model.Meta;
 import com.internship.thien.nytimesnews.data.model.News;
 import com.internship.thien.nytimesnews.helper.DBHelper;
 import com.internship.thien.nytimesnews.search.model.DataListener;
@@ -25,36 +26,26 @@ public class ListNewsPresenterImpl implements ListNewsPresenter, DataListener {
     }
 
     @Override
-    public void getNews(Context context, Map<String, String> query) {
+    public void getNews(Context context, Map<String, String> query, int type) {
 
         mView.showLoading();
         if (NetworkUtils.isOnline(context))
-            newsRepository.getDataFromNetWork(this, query);
+             newsRepository.getDataFromNetWork(this, query, type);
         else
             mView.showError("No network connection. Please try again!");
 
     }
 
-    public Map setupQuery(Context context, String query) {
+    public Map<String, String> setupQuery(Context context, String query) {
 
-        //DBHelper db  = new DBHelper();
-
-        Map<String, String> data = DBHelper.newInstance().getDB(context);
-
-        if(data.get("fq") != null)
-            query = query + " " + data.get("fq");
-
-        data.put("fq", query);
-
-        Log.d("Query setup",data.toString());
-        return data;
+        return newsRepository.addQuery(context, query);
     }
 
     @Override
-    public void onResponse(List<News> news) {
+    public void onResponse(List<News> news, int type, Meta meta) {
 
         mView.hideLoading();
-        mView.showListNews(news);
+        mView.showListNews(news, type, meta);
 
     }
 
@@ -78,6 +69,11 @@ public class ListNewsPresenterImpl implements ListNewsPresenter, DataListener {
     @Override
     public String setupDate(int day, int month, int year) {
        return newsRepository.setupDateString(day, month, year);
+    }
+
+    @Override
+    public int setupPage(Meta meta) {
+        return newsRepository.setupOffset(meta);
     }
 
 

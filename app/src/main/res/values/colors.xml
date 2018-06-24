@@ -7,12 +7,14 @@
     <!-- Each news item -->
     <color name="white">#FFF</color>
     <color name="black">#000</color>
+
     <!-- Main page -->
-    <color name="neutral">#EFEFEF</color>
-    <color name="paper">#D5D5D5</color>
-    <color name="grey_back">#5A5A5A</color>
+    <color name="grey_back">#cccccc</color>
     <color name="dark_black">#1A1A1A</color>
-    <!-- Rating bar -->
-    <color name="gold">#FFD700</color>
-    <color name="orange">#FF8C00</color>
+
+    <!--News item-->
+    <color name="blur_background">#F0F0F0</color>
+    <color name="black_text">#333333</color>
+
+
 </resources>
