@@ -1,6 +1,6 @@
-# Project 1 - **NYtimes News**
+# Project 1 - **NYTimes News**
 
-**NYtimes News** shows the news online that follow the query from user. The app utilizes theNew York Times Search Database API to display images and basic information about these articles to the user.
+**NYTimes News** shows the news online that follow the query from user. The app utilizes the New York Times Search Database API to display images and basic information about these articles to the user.
 
 Time spent: **35** hours spent in total
 
@@ -51,7 +51,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-[Video walkthrough](https://i.imgur.com/CFAYDpq.gif)(Due to heavy size of gif file)
+[Video walkthrough](https://i.imgur.com/CFAYDpq.gif) (Due to heavy size of gif file)
 
 <img src='https://i.imgur.com/bY7dZFu.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
