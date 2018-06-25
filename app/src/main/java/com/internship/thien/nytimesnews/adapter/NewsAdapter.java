@@ -53,16 +53,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        int orientation = mContext.getResources().getConfiguration().orientation;
-        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            if (viewType == 0)
-                postView = inflater.inflate(R.layout.item_news, parent, false);
-            else
-                postView = inflater.inflate(R.layout.item_news_text, parent, false);
 
-        }
-        else
+        if (viewType == 0)
             postView = inflater.inflate(R.layout.item_news, parent, false);
+        else
+            postView = inflater.inflate(R.layout.item_news_text, parent, false);
 
         return new ViewHolder(postView, this.mNewsListener);
     }
@@ -72,7 +67,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
 
         final String link_thumbnail;
 
-        News News = mNews.get(position);
+        News news = mNews.get(position);
 
         CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(mContext);
         circularProgressDrawable.setStrokeWidth(4f);
@@ -80,27 +75,57 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
         circularProgressDrawable.setColorSchemeColors(android.R.color.holo_orange_light);
         circularProgressDrawable.start();
 
-        //int orientation = mContext.getResources().getConfiguration().orientation;
-        //if (orientation == Configuration.ORIENTATION_PORTRAIT)
+        int orientation = mContext.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if(news.getMultimedia().size()!= 0) {
+                assert holder.headline != null;
+                holder.headline.setText(news.getHeadline().getMain());
 
-        if(News.getMultimedia().size()!= 0) {
-            assert holder.headline != null;
-            holder.headline.setText(News.getHeadline().getMain());
+                link_thumbnail = createThumbnailLink(news.getMultimedia().get(0).getUrl());
+                assert holder.thumbnail != null;
+                Glide.with(mContext).load(link_thumbnail)
+                        .apply(new RequestOptions()
+                                .placeholder(circularProgressDrawable)
+                                .fitCenter())
+                        .into(holder.thumbnail);
+            }
+            else {
 
-            link_thumbnail = createThumbnailLink(News.getMultimedia().get(0).getUrl());
-            assert holder.thumbnail != null;
-            Glide.with(mContext).load(link_thumbnail)
-                    .apply(new RequestOptions()
-                            .placeholder(circularProgressDrawable)
-                            .fitCenter())
-                    .into(holder.thumbnail);
+                assert holder.headline != null;
+                holder.headline.setText(news.getHeadline().getMain());
+                assert holder.snippet != null;
+                holder.snippet.setText(news.getSnippet());
+            }
         }
-        else {
+        else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
-            assert holder.headline != null;
-            holder.headline.setText(News.getHeadline().getMain());
-            assert holder.snippet != null;
-            holder.snippet.setText(News.getSnippet());
+            String snippet = news.getSnippet();
+
+            if (snippet.length() > 100)
+                snippet = news.getSnippet().substring(0,100) + "...";
+
+            if(news.getMultimedia().size()!= 0) {
+
+                assert holder.headline != null;
+                holder.headline.setText(news.getHeadline().getMain());
+                assert holder.snippet != null;
+                holder.snippet.setText(snippet);
+
+                link_thumbnail = createThumbnailLink(news.getMultimedia().get(0).getUrl());
+                assert holder.thumbnail != null;
+                Glide.with(mContext).load(link_thumbnail)
+                        .apply(new RequestOptions()
+                                .placeholder(circularProgressDrawable)
+                                .fitCenter())
+                        .into(holder.thumbnail);
+            }
+            else {
+
+                assert holder.headline != null;
+                holder.headline.setText(news.getHeadline().getMain());
+                assert holder.snippet != null;
+                holder.snippet.setText(snippet);
+            }
         }
 
     }
@@ -137,11 +162,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
 
     public void setListener(NewsItemListener listener) {
         this.mNewsListener = listener;
-    }
-
-    public void updateNews(List<News> News) {
-        mNews = News;
-        notifyDataSetChanged();
     }
 
     private News getItem(int adapterPosition) {

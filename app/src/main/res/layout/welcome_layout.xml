@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <ImageView
+        android:id="@+id/img_logo"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/img_nyt_logo"

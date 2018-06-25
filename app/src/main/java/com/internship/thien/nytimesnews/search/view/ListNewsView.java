@@ -12,6 +12,8 @@ public interface ListNewsView {
 
     void setupView();
 
+    void defaultQuery();
+
     void showListNews(List<News> news, int type, Meta meta);
 
     void searchBarListener(MenuItem searchItem);
@@ -27,5 +29,6 @@ public interface ListNewsView {
     void hideLoading();
 
     void showError(String error);
+
 
 }

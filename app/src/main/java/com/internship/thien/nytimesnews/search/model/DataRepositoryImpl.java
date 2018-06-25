@@ -52,15 +52,19 @@ public class DataRepositoryImpl implements DataRepository {
 
                     List<News> news = Objects.requireNonNull(response.body()).getResponse().getNews();
                     if (news != null) {
-                        meta = new Meta();
-                        meta = Objects.requireNonNull(response.body()).getResponse().getMeta();
 
-                        listener.onResponse(news, type, meta);
+                        if(news.size() != 0) {
+                            meta = new Meta();
+                            meta = Objects.requireNonNull(response.body()).getResponse().getMeta();
+                            listener.onResponse(news, type, meta);
+                        }
+                        else
+                            listener.onError("Nothing return!");
 
                     }
-                    else {
+                    else
                         listener.onError("Nothing return!");
-                    }
+
                 }
                 else {
                     Log.d("Response","Fail");
@@ -89,9 +93,9 @@ public class DataRepositoryImpl implements DataRepository {
 
         EditText ed_date = view.findViewById(R.id.edit_date);
         Spinner spinner = view.findViewById(R.id.spn_sort);
-        SwitchCompat check_0 = view.findViewById(R.id.sw_arts);
-        SwitchCompat check_1 = view.findViewById(R.id.sw_fashion);
-        SwitchCompat check_2 = view.findViewById(R.id.sw_sports);
+        SwitchCompat swArts = view.findViewById(R.id.sw_arts);
+        SwitchCompat swFashion = view.findViewById(R.id.sw_fashion);
+        SwitchCompat swSports = view.findViewById(R.id.sw_sports);
 
         date = ed_date.getText().toString();
         String[] separated = date.split("/");
@@ -102,11 +106,11 @@ public class DataRepositoryImpl implements DataRepository {
         sort = upperFirstLetter(spinner.getSelectedItem().toString());
         Log.d("Spinner", sort);
 
-        if (check_0.isChecked())
+        if (swArts.isChecked())
             new_desk += "\"Arts\" ";
-        if (check_1.isChecked())
+        if (swFashion.isChecked())
             new_desk += "\"Fashion & Style\" ";
-        if (check_2.isChecked())
+        if (swSports.isChecked())
             new_desk += "\"Sports\" ";
         new_desk += ")";
         Log.d("Check box", new_desk);

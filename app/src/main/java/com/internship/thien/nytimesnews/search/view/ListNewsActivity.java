@@ -3,12 +3,15 @@ package com.internship.thien.nytimesnews.search.view;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -16,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.transition.Fade;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 
@@ -70,6 +75,7 @@ public class ListNewsActivity extends AppCompatActivity implements ListNewsView,
 
         //Display the logo during 5 seconds,
         new CountDownTimer(5000,1000){
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onTick(long millisUntilFinished){}
 
@@ -83,6 +89,7 @@ public class ListNewsActivity extends AppCompatActivity implements ListNewsView,
                 setupView();
                 DataRepository repository = new DataRepositoryImpl();
                 presenter = new ListNewsPresenterImpl( ListNewsActivity.this, repository);
+                defaultQuery();
             }
         }.start();
 
@@ -109,6 +116,17 @@ public class ListNewsActivity extends AppCompatActivity implements ListNewsView,
             }
         };
         rvNews.addOnScrollListener(scrollListener);
+    }
+
+    @Override
+    public void defaultQuery() {
+
+        String defaultQuery = "fashion";
+        Map<String, String> data = presenter.setupQuery(getApplicationContext(), defaultQuery);
+        input = defaultQuery;
+
+        scrollListener.resetState();
+        presenter.getNews(getApplicationContext(), data, 0);
     }
 
     @Override
@@ -283,6 +301,22 @@ public class ListNewsActivity extends AppCompatActivity implements ListNewsView,
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
         editDate.setText(presenter.setupDate(dayOfMonth, monthOfYear, year));
+
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        Map<String, String> data;
+        if (!input.equals("")) {
+
+            setupView();
+            data = presenter.setupQuery(getApplicationContext(), input);
+
+            scrollListener.resetState();
+            presenter.getNews(getApplicationContext(), data, 0);
+        }
 
     }
 
